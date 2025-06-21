@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Uploader PDF / DOCX</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    h2 {
+      margin-top: 30px;
+    }
+
+    input,
+    button {
+      padding: 8px;
+      margin: 10px 0;
+      width: 100%;
+    }
+
+    .response {
+      background: #f4f4f4;
+      padding: 10px;
+      white-space: pre-wrap;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Upload PDF / DOCX</h1>
+  <form id="uploadForm">
+    <input type="file" name="files" id="fileInput" multiple required />
+    <button type="submit">Upload File</button>
+  </form>
+
+  <div id="uploadResult" class="response"></div>
+
+  <h2>Parse file by ID</h2>
+  <input type="number" id="fileIdInput" placeholder="Enter File ID">
+  <button onclick="parseFile()">Parse File</button>
+
+  <div id="parseResult" class="response"></div>
+
+  <script>
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadResult = document.getElementById('uploadResult');
+    const parseResult = document.getElementById('parseResult');
+
+    uploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      const files = document.getElementById('fileInput').files;
+      for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+      }
+
+      formData.append('file', fileInput.files[0]);
+
+      const res = await fetch('http://localhost:5000/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      uploadResult.textContent = JSON.stringify(data, null, 2);
+    });
+
+    async function parseFile() {
+      const fileId = document.getElementById('fileIdInput').value;
+      const res = await fetch(`http://localhost:5000/parse/${fileId}`);
+      const data = await res.json();
+      parseResult.textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+Rise a Flask_Api:
+_____Windows_____
+Build: build -t flask-api .
+Run: docker run -d -p 5000:5000 --name flask-api-container flask-api
+Run without mapping port: docker run -d --network host flask-api
